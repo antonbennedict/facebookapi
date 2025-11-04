@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/posts")
+@CrossOrigin(origins = "http://localhost:5173") // <--- Allow requests from your frontend
 public class PostController {
 
     private final PostRepository repo;
@@ -20,7 +21,6 @@ public class PostController {
     // Create a post
     @PostMapping
     public ResponseEntity<Post> createPost(@RequestBody Post post) {
-        // id, createdAt and modifiedAt will be set automatically
         Post saved = repo.save(post);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
@@ -45,7 +45,6 @@ public class PostController {
             p.setAuthor(updated.getAuthor());
             p.setContent(updated.getContent());
             p.setImageUrl(updated.getImageUrl());
-            // modifiedAt will be set by @PreUpdate
             return repo.save(p);
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found"));
     }
